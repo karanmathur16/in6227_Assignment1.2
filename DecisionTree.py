@@ -1,5 +1,6 @@
 import pandas as pd
 import time
+import math
 from sklearn import metrics, preprocessing
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.tree import DecisionTreeClassifier
@@ -86,6 +87,13 @@ fmeasure = metrics.f1_score(y_test_num, prediction_num, average="weighted")
 print("Test Train Split Recall GridSearchDT:", recall)
 print("Test Train Split Precision GridSearchDT:", precision)
 print("Test Train Split F-Measure GridSearchDT:", fmeasure)
+
+numberOfSamples = len(X_test.index)
+confidence = 0.95
+zscore = 1.96
+
+confidenceInterval = zscore * math.sqrt((error_rate * (1 - error_rate)) / numberOfSamples)
+print("Confidence Interval = " + str(round(error_rate,3)) + " \u00B1 " + str(round(confidenceInterval,3)))
 
 ##Test Data fragment
 test_data = testdata_df.drop(['education'],axis=1) # education-num already exists, same with train set

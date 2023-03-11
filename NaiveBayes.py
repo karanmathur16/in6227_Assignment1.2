@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import time
+import math
 from sklearn import metrics, preprocessing
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.naive_bayes import GaussianNB
@@ -86,8 +87,17 @@ gridPredictTime = endGridTimePredict - startGridTimePredict
 print(f"Time to apply gridSearch NB Model: {gridPredictTime:.3f} seconds")
 
 print("Test-Train split GridSearch Accuracy:",metrics.accuracy_score(y_test, newNBGridModelPredict))
+error_rate = 1 - (metrics.accuracy_score(y_test, prediction))
 
-#Test Data code fragment
+
+numberOfSamples = len(X_test.index)
+confidence = 0.95
+zscore = 1.96
+
+confidenceInterval = zscore * math.sqrt((error_rate * (1 - error_rate)) / numberOfSamples)
+print("Confidence Interval = " + str(round(error_rate,3)) + " \u00B1 " + str(round(confidenceInterval,3)))
+
+# #Test Data code fragment
 test_data = testdata_df.drop(['education'],axis=1) # education-num already exists, same with train set
 test_data_features = test_data.drop(['label'],axis=1)
 test_data_labels = test_data['label']
